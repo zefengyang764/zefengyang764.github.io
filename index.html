@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Zefeng Yang 的个人主页，展示个人简介、经历、作品与联系方式。">
+  <meta name="theme-color" content="#f4f1eb">
+  <meta property="og:title" content="Zefeng Yang | 个人主页">
+  <meta property="og:description" content="关于我、我的经历、作品与联系方式。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zefengyang764.github.io/">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/279567242?v=4">
+  <title>Zefeng Yang | 个人主页</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://avatars.githubusercontent.com">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content" data-i18n="skip">跳到主要内容</a>
+
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="返回首页">ZY<span>.</span></a>
+    <nav class="desktop-nav" aria-label="主要导航">
+      <a href="#about" data-i18n="navAbout">关于</a>
+      <a href="#experience" data-i18n="navExperience">经历</a>
+      <a href="#projects" data-i18n="navProjects">作品</a>
+      <a href="#contact" data-i18n="navContact">联系</a>
+    </nav>
+    <div class="header-actions">
+      <button class="text-button" id="language-toggle" type="button" aria-label="Switch to English">EN</button>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深色模式">
+        <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero section" id="home">
+      <div class="hero-copy reveal">
+        <p class="eyebrow" data-i18n="heroEyebrow">你好，我是</p>
+        <h1>Zefeng<br><span>Yang.</span></h1>
+        <p class="hero-description" data-i18n="heroDescription">
+          这里是一段示例介绍：我对新事物保持好奇，正在探索、学习，并认真创造属于自己的作品。
+        </p>
+        <div class="hero-links">
+          <a class="primary-button" href="#projects" data-i18n="viewWork">查看作品</a>
+          <a class="secondary-button" href="mailto:zefengyang764@gmail.com" data-i18n="emailMe">给我邮件</a>
+        </div>
+      </div>
+      <div class="portrait-wrap reveal">
+        <div class="portrait-accent" aria-hidden="true"></div>
+        <img
+          class="portrait"
+          src="https://avatars.githubusercontent.com/u/279567242?v=4"
+          alt="Zefeng Yang 的 GitHub 头像"
+          width="460"
+          height="460"
+        >
+        <div class="availability">
+          <span aria-hidden="true"></span>
+          <span data-i18n="availability">保持好奇，持续创造</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about-grid" id="about">
+      <div class="section-heading reveal">
+        <p class="eyebrow" data-i18n="aboutEyebrow">关于我</p>
+        <h2 data-i18n="aboutTitle">把好奇心变成<br>真实的作品。</h2>
+      </div>
+      <div class="about-copy reveal">
+        <p data-i18n="aboutBodyOne">
+          这是示例文案：你可以在这里介绍自己是谁、正在做什么，以及你最看重的事情。
+        </p>
+        <p data-i18n="aboutBodyTwo">
+          不需要写得像正式简历。几句真诚、具体的话，往往更容易让别人认识你。
+        </p>
+        <div class="skills" aria-label="技能">
+          <span data-i18n="skillOne">持续学习</span>
+          <span data-i18n="skillTwo">创意思考</span>
+          <span data-i18n="skillThree">沟通协作</span>
+          <span data-i18n="skillFour">解决问题</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experience">
+      <div class="section-heading reveal">
+        <p class="eyebrow" data-i18n="experienceEyebrow">我的经历</p>
+        <h2 data-i18n="experienceTitle">一路学习，一路成长。</h2>
+      </div>
+      <div class="timeline">
+        <article class="timeline-item reveal">
+          <p class="timeline-date" data-i18n="experienceDateOne">现在</p>
+          <div>
+            <h3 data-i18n="experienceRoleOne">探索中的创造者</h3>
+            <p class="muted" data-i18n="experiencePlaceOne">个人成长 · 示例内容</p>
+            <p data-i18n="experienceBodyOne">学习新的工具与方法，把想法一步步变成可以被看见和使用的成果。</p>
+          </div>
+        </article>
+        <article class="timeline-item reveal">
+          <p class="timeline-date" data-i18n="experienceDateTwo">从前</p>
+          <div>
+            <h3 data-i18n="experienceRoleTwo">你的上一段经历</h3>
+            <p class="muted" data-i18n="experiencePlaceTwo">学校或组织 · 示例内容</p>
+            <p data-i18n="experienceBodyTwo">这里可以写一段学习、工作、志愿活动，或任何对你有意义的经历。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-heading reveal">
+        <p class="eyebrow" data-i18n="projectsEyebrow">精选作品</p>
+        <h2 data-i18n="projectsTitle">一些正在发生的想法。</h2>
+      </div>
+      <div class="project-grid">
+        <article class="project-card featured reveal">
+          <div class="project-number">01</div>
+          <div class="project-content">
+            <p class="project-label" data-i18n="projectLabelOne">个人项目 · 示例</p>
+            <h3 data-i18n="projectTitleOne">我的第一个作品</h3>
+            <p data-i18n="projectBodyOne">在这里介绍作品解决了什么问题、你做了什么，以及最终取得了怎样的结果。</p>
+            <span class="project-status" data-i18n="comingSoon">内容即将更新</span>
+          </div>
+        </article>
+        <article class="project-card reveal">
+          <div class="project-number">02</div>
+          <div class="project-content">
+            <p class="project-label" data-i18n="projectLabelTwo">学习记录 · 示例</p>
+            <h3 data-i18n="projectTitleTwo">一次有趣的探索</h3>
+            <p data-i18n="projectBodyTwo">作品不一定宏大，一次学习、一篇文章或一个小实验，都值得被认真记录。</p>
+            <span class="project-status" data-i18n="comingSoon">内容即将更新</span>
+          </div>
+        </article>
+        <article class="project-card reveal">
+          <div class="project-number">03</div>
+          <div class="project-content">
+            <p class="project-label" data-i18n="projectLabelThree">未来计划 · 示例</p>
+            <h3 data-i18n="projectTitleThree">下一件想做的事</h3>
+            <p data-i18n="projectBodyThree">写下你接下来想尝试的方向，也许它会成为一个很好的开始。</p>
+            <span class="project-status" data-i18n="comingSoon">内容即将更新</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="contact section reveal" id="contact">
+      <p class="eyebrow" data-i18n="contactEyebrow">保持联系</p>
+      <h2 data-i18n="contactTitle">有想法？<br>来聊聊吧。</h2>
+      <p data-i18n="contactBody">欢迎通过邮件联系我，也可以在 GitHub 上看看我最近的动态。</p>
+      <div class="contact-links">
+        <a href="mailto:zefengyang764@gmail.com">
+          <span>Email</span>
+          <strong>zefengyang764@gmail.com</strong>
+        </a>
+        <a href="https://github.com/zefengyang764" target="_blank" rel="noreferrer">
+          <span>GitHub</span>
+          <strong>@zefengyang764</strong>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Zefeng Yang</p>
+    <a href="#home" data-i18n="backToTop">返回顶部 ↑</a>
+  </footer>
+</body>
+</html>
