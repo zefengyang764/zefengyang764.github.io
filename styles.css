@@ -445,6 +445,16 @@ button {
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--surface);
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover,
+.project-card:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+  transform: translateY(-4px);
 }
 
 .project-card.featured {
