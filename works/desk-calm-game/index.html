@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>桌面清压台</title>
+  <meta name="description" content="一款适合办公室短暂放松的单机小游戏，支持单人和双人同屏模式。">
+  <style>
+    :root {
+      --ink: #16212b;
+      --muted: #64727f;
+      --paper: #f6f1e7;
+      --paper-deep: #e6ddcc;
+      --blue: #1d76a8;
+      --mint: #2d9d78;
+      --rose: #d95d6a;
+      --sun: #edaa32;
+      --violet: #7766c6;
+      --shadow: 0 18px 50px rgba(22, 33, 43, .16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(237, 170, 50, .24), transparent 24rem),
+        radial-gradient(circle at 88% 22%, rgba(45, 157, 120, .2), transparent 25rem),
+        linear-gradient(135deg, #f9f3e8 0%, #e7eef2 52%, #f8eee2 100%);
+      overflow: hidden;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1180px, 100%);
+      height: min(760px, calc(100vh - 36px));
+      min-height: 620px;
+      display: grid;
+      grid-template-columns: minmax(250px, 310px) 1fr;
+      border: 1px solid rgba(22, 33, 43, .12);
+      border-radius: 8px;
+      background: rgba(255, 252, 246, .76);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(18px);
+    }
+
+    .panel {
+      padding: 24px;
+      border-right: 1px solid rgba(22, 33, 43, .12);
+      background: rgba(255, 255, 255, .55);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: #fff;
+      font-size: 26px;
+      box-shadow: inset 0 -5px 0 rgba(255,255,255,.1);
+    }
+
+    h1, h2, p { margin: 0; }
+
+    h1 {
+      font-size: 1.45rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.55;
+    }
+
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mode-btn,
+    .primary-btn,
+    .ghost-btn,
+    .sound-btn {
+      min-height: 44px;
+      border: 1px solid rgba(22, 33, 43, .16);
+      border-radius: 8px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, .75);
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .mode-btn:hover,
+    .primary-btn:hover,
+    .ghost-btn:hover,
+    .sound-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(22, 33, 43, .12);
+    }
+
+    .mode-btn.active {
+      color: #fff;
+      background: var(--blue);
+      border-color: transparent;
+    }
+
+    .primary-btn {
+      width: 100%;
+      color: #fff;
+      border-color: transparent;
+      background: var(--mint);
+      font-weight: 800;
+    }
+
+    .ghost-btn {
+      width: 100%;
+      background: transparent;
+    }
+
+    .sound-btn {
+      width: 46px;
+      min-width: 46px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid rgba(22, 33, 43, .1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .6);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.2;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.35rem;
+      line-height: 1.1;
+    }
+
+    .keys {
+      margin-top: auto;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(22, 33, 43, .06);
+      color: #34424f;
+      font-size: .88rem;
+      line-height: 1.65;
+    }
+
+    .desk-wrap {
+      position: relative;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.44) 1px, transparent 1px);
+      background-size: 52px 52px;
+    }
+
+    .topbar {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(22, 33, 43, .12);
+    }
+
+    .message {
+      min-width: 0;
+      font-weight: 800;
+      font-size: clamp(1rem, 2vw, 1.6rem);
+      line-height: 1.2;
+    }
+
+    .message small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .desk {
+      position: relative;
+      overflow: hidden;
+      cursor: crosshair;
+      background:
+        linear-gradient(160deg, rgba(255,255,255,.32), transparent 40%),
+        linear-gradient(90deg, rgba(29,118,168,.08), rgba(237,170,50,.1));
+    }
+
+    .split {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: none;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .duo .split { display: grid; }
+
+    .half {
+      position: relative;
+    }
+
+    .half:first-child {
+      border-right: 2px dashed rgba(22, 33, 43, .18);
+    }
+
+    .half::before {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.65);
+      color: rgba(22,33,43,.72);
+      font-weight: 800;
+      font-size: .82rem;
+    }
+
+    .half:first-child::before { content: "玩家 1"; }
+    .half:last-child::before { content: "玩家 2"; }
+
+    .object {
+      position: absolute;
+      width: 82px;
+      height: 82px;
+      border: 0;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 20px rgba(22, 33, 43, .18);
+      user-select: none;
+      touch-action: manipulation;
+      animation: pop .2s ease-out, breathe 1s ease-in-out infinite alternate;
+    }
+
+    .object[data-kind="mail"] { background: var(--blue); }
+    .object[data-kind="coffee"] { background: #8b6344; }
+    .object[data-kind="memo"] { background: var(--sun); color: #392813; }
+    .object[data-kind="alert"] { background: var(--rose); }
+    .object[data-kind="plant"] { background: var(--mint); }
+    .object[data-kind="clip"] { background: var(--violet); }
+
+    .object.expired {
+      opacity: .35;
+      transform: scale(.84);
+      pointer-events: none;
+    }
+
+    .object.squash {
+      animation: squash .22s ease forwards;
+    }
+
+    .keycap {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      min-width: 24px;
+      height: 24px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      color: rgba(22,33,43,.86);
+      background: rgba(255,255,255,.82);
+      font-size: .72rem;
+      line-height: 1;
+    }
+
+    .float {
+      position: absolute;
+      z-index: 3;
+      pointer-events: none;
+      color: var(--ink);
+      font-size: 1rem;
+      font-weight: 900;
+      animation: floatup .7s ease-out forwards;
+      text-shadow: 0 1px 0 rgba(255,255,255,.8);
+    }
+
+    .calm-meter {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(22, 33, 43, .1);
+    }
+
+    .calm-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--rose), var(--sun), var(--mint));
+      transition: width .2s ease;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(248, 243, 233, .6);
+      backdrop-filter: blur(10px);
+    }
+
+    .overlay.hidden { display: none; }
+
+    .start-card {
+      width: min(560px, 100%);
+      padding: 26px;
+      border: 1px solid rgba(22, 33, 43, .14);
+      border-radius: 8px;
+      background: rgba(255,255,255,.88);
+      box-shadow: var(--shadow);
+    }
+
+    .start-card h2 {
+      font-size: clamp(1.7rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .start-card p {
+      margin: 12px 0 18px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .result div {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(29,118,168,.08);
+      font-weight: 800;
+    }
+
+    .result span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 500;
+    }
+
+    @keyframes pop {
+      from { transform: scale(.4) rotate(-8deg); opacity: 0; }
+      to { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    @keyframes breathe {
+      from { translate: 0 0; }
+      to { translate: 0 -4px; }
+    }
+
+    @keyframes squash {
+      to { transform: scale(.15) rotate(16deg); opacity: 0; }
+    }
+
+    @keyframes floatup {
+      to { transform: translateY(-34px); opacity: 0; }
+    }
+
+    @media (max-width: 820px) {
+      body {
+        padding: 0;
+        overflow: auto;
+      }
+
+      .app {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+        grid-template-columns: 1fr;
+        border-radius: 0;
+      }
+
+      .panel {
+        padding: 16px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(22, 33, 43, .12);
+      }
+
+      .keys {
+        margin-top: 0;
+      }
+
+      .desk-wrap {
+        min-height: 620px;
+      }
+
+      .topbar {
+        padding: 14px;
+        align-items: flex-start;
+      }
+
+      .actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .object {
+        width: 70px;
+        height: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <aside class="panel" aria-label="游戏控制">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">⌘</div>
+        <div>
+          <h1>桌面清压台</h1>
+          <p class="subtitle">一分钟，把工位上的小压力全部清掉。</p>
+        </div>
+      </div>
+
+      <div class="modes" role="group" aria-label="选择模式">
+        <button class="mode-btn active" type="button" data-mode="solo">单人</button>
+        <button class="mode-btn" type="button" data-mode="duo">双人</button>
+      </div>
+
+      <button class="primary-btn" type="button" id="startBtn">开始放松</button>
+      <button class="ghost-btn" type="button" id="resetBtn">重新开局</button>
+
+      <div class="stat-grid">
+        <div class="stat"><span>剩余</span><strong id="timeText">60</strong></div>
+        <div class="stat"><span>连击</span><strong id="comboText">0</strong></div>
+        <div class="stat"><span id="scoreALabel">分数</span><strong id="scoreA">0</strong></div>
+        <div class="stat"><span id="scoreBLabel">舒缓度</span><strong id="scoreB">0%</strong></div>
+      </div>
+
+      <div class="calm-meter" aria-label="舒缓度">
+        <div class="calm-fill" id="calmFill"></div>
+      </div>
+
+      <div class="keys" id="keyHelp">
+        鼠标点击小物件即可清理。键盘可用 A、S、D、F 快速敲掉带字母的物件，空格暂停。
+      </div>
+    </aside>
+
+    <section class="desk-wrap">
+      <header class="topbar">
+        <div class="message" id="message">
+          选好模式就开一局
+          <small>短局、轻操作、没有输赢压力。</small>
+        </div>
+        <div class="actions">
+          <button class="sound-btn" type="button" id="soundBtn" aria-label="切换声音">♪</button>
+          <button class="ghost-btn" type="button" id="pauseBtn">暂停</button>
+        </div>
+      </header>
+
+      <div class="desk" id="desk" aria-label="游戏区域">
+        <div class="split" aria-hidden="true">
+          <div class="half"></div>
+          <div class="half"></div>
+        </div>
+        <div class="overlay" id="overlay">
+          <div class="start-card">
+            <h2>把今天的杂音按扁。</h2>
+            <p>邮件、咖啡、便签、提醒会随机冒出来。清得越快，舒缓度涨得越快。双人模式下左右半场各算各的分。</p>
+            <div class="result" id="resultBox">
+              <div>单人模式<span>A S D F 或鼠标</span></div>
+              <div>双人模式<span>玩家1 Q W E R，玩家2 U I O P</span></div>
+            </div>
+            <button class="primary-btn" type="button" id="overlayStart">开始放松</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const desk = document.querySelector("#desk");
+    const overlay = document.querySelector("#overlay");
+    const startBtn = document.querySelector("#startBtn");
+    const overlayStart = document.querySelector("#overlayStart");
+    const resetBtn = document.querySelector("#resetBtn");
+    const pauseBtn = document.querySelector("#pauseBtn");
+    const soundBtn = document.querySelector("#soundBtn");
+    const message = document.querySelector("#message");
+    const timeText = document.querySelector("#timeText");
+    const comboText = document.querySelector("#comboText");
+    const scoreA = document.querySelector("#scoreA");
+    const scoreB = document.querySelector("#scoreB");
+    const scoreALabel = document.querySelector("#scoreALabel");
+    const scoreBLabel = document.querySelector("#scoreBLabel");
+    const calmFill = document.querySelector("#calmFill");
+    const keyHelp = document.querySelector("#keyHelp");
+    const resultBox = document.querySelector("#resultBox");
+    const modeButtons = [...document.querySelectorAll(".mode-btn")];
+    const deskWrap = document.querySelector(".desk-wrap");
+
+    const items = [
+      { kind: "mail", icon: "✉", text: "邮件归档" },
+      { kind: "coffee", icon: "☕", text: "补一口水" },
+      { kind: "memo", icon: "✓", text: "便签完成" },
+      { kind: "alert", icon: "!", text: "提醒静音" },
+      { kind: "plant", icon: "♧", text: "伸展一下" },
+      { kind: "clip", icon: "⌁", text: "线头理顺" }
+    ];
+
+    const soloKeys = ["a", "s", "d", "f"];
+    const duoLeftKeys = ["q", "w", "e", "r"];
+    const duoRightKeys = ["u", "i", "o", "p"];
+
+    let state = {
+      mode: "solo",
+      running: false,
+      paused: false,
+      sound: true,
+      time: 60,
+      combo: 0,
+      calm: 0,
+      scoreAValue: 0,
+      scoreBValue: 0,
+      spawnDelay: 850,
+      ticker: null,
+      spawner: null,
+      audio: null
+    };
+
+    function initAudio() {
+      if (!state.audio && window.AudioContext) {
+        state.audio = new AudioContext();
+      }
+    }
+
+    function beep(freq, duration, type = "sine") {
+      if (!state.sound || !state.audio) return;
+      const osc = state.audio.createOscillator();
+      const gain = state.audio.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(.0001, state.audio.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.08, state.audio.currentTime + .01);
+      gain.gain.exponentialRampToValueAtTime(.0001, state.audio.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(state.audio.destination);
+      osc.start();
+      osc.stop(state.audio.currentTime + duration + .02);
+    }
+
+    function setMode(mode) {
+      if (state.running) return;
+      state.mode = mode;
+      deskWrap.classList.toggle("duo", mode === "duo");
+      modeButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.mode === mode));
+      scoreALabel.textContent = mode === "duo" ? "玩家1" : "分数";
+      scoreBLabel.textContent = mode === "duo" ? "玩家2" : "舒缓度";
+      keyHelp.textContent = mode === "duo"
+        ? "双人同屏：玩家1 用 Q W E R，玩家2 用 U I O P，也可以各点自己半场。空格暂停。"
+        : "鼠标点击小物件即可清理。键盘可用 A、S、D、F 快速敲掉带字母的物件，空格暂停。";
+      updateStats();
+    }
+
+    function startGame() {
+      initAudio();
+      resetGame(false);
+      state.running = true;
+      overlay.classList.add("hidden");
+      message.innerHTML = state.mode === "duo"
+        ? "左右开清，谁先轻松谁赢<small>看准字母或点击自己半场的小物件。</small>"
+        : "开始清理桌面压力<small>连续清理会提高舒缓度和分数。</small>";
+      state.ticker = setInterval(tick, 1000);
+      scheduleSpawn(250);
+      beep(520, .08, "triangle");
+    }
+
+    function resetGame(showOverlay = true) {
+      clearInterval(state.ticker);
+      clearTimeout(state.spawner);
+      document.querySelectorAll(".object, .float").forEach(el => el.remove());
+      Object.assign(state, {
+        running: false,
+        paused: false,
+        time: 60,
+        combo: 0,
+        calm: 0,
+        scoreAValue: 0,
+        scoreBValue: 0,
+        spawnDelay: 850
+      });
+      pauseBtn.textContent = "暂停";
+      if (showOverlay) {
+        overlay.classList.remove("hidden");
+        message.innerHTML = "选好模式就开一局<small>短局、轻操作、没有输赢压力。</small>";
+        overlay.querySelector("h2").textContent = "把今天的杂音按扁。";
+        overlay.querySelector("p").textContent = "邮件、咖啡、便签、提醒会随机冒出来。清得越快，舒缓度涨得越快。双人模式下左右半场各算各的分。";
+        overlayStart.textContent = "开始放松";
+        resultBox.innerHTML = '<div>单人模式<span>A S D F 或鼠标</span></div><div>双人模式<span>玩家1 Q W E R，玩家2 U I O P</span></div>';
+      }
+      updateStats();
+    }
+
+    function togglePause() {
+      if (!state.running) return;
+      state.paused = !state.paused;
+      pauseBtn.textContent = state.paused ? "继续" : "暂停";
+      message.innerHTML = state.paused
+        ? "先松一口气<small>再按一次继续。</small>"
+        : "继续清理桌面压力<small>保持节奏就好。</small>";
+      if (!state.paused) scheduleSpawn(200);
+    }
+
+    function tick() {
+      if (state.paused) return;
+      state.time -= 1;
+      state.calm = Math.min(100, state.calm + .25);
+      state.spawnDelay = Math.max(360, state.spawnDelay - 7);
+      updateStats();
+      if (state.time <= 0) finishGame();
+    }
+
+    function scheduleSpawn(delay = state.spawnDelay) {
+      clearTimeout(state.spawner);
+      state.spawner = setTimeout(() => {
+        if (state.running && !state.paused) {
+          spawnObject();
+          if (Math.random() > .78 || state.time < 24) spawnObject();
+        }
+        if (state.running) scheduleSpawn();
+      }, delay);
+    }
+
+    function spawnObject() {
+      const rect = desk.getBoundingClientRect();
+      const item = items[Math.floor(Math.random() * items.length)];
+      const obj = document.createElement("button");
+      const side = state.mode === "duo" ? (Math.random() > .5 ? "right" : "left") : "solo";
+      const keys = state.mode === "solo" ? soloKeys : side === "left" ? duoLeftKeys : duoRightKeys;
+      const key = keys[Math.floor(Math.random() * keys.length)];
+      const size = window.innerWidth < 820 ? 70 : 82;
+      const halfWidth = rect.width / 2;
+      const minX = side === "right" ? halfWidth + 22 : 22;
+      const maxX = side === "left" ? halfWidth - size - 22 : rect.width - size - 22;
+      const x = randomBetween(minX, Math.max(minX, maxX));
+      const y = randomBetween(28, Math.max(28, rect.height - size - 32));
+      obj.className = "object";
+      obj.dataset.kind = item.kind;
+      obj.dataset.key = key;
+      obj.dataset.side = side;
+      obj.style.left = `${x}px`;
+      obj.style.top = `${y}px`;
+      obj.setAttribute("aria-label", `${item.text}，按 ${key.toUpperCase()} 或点击`);
+      obj.innerHTML = `${item.icon}<span class="keycap">${key.toUpperCase()}</span>`;
+      obj.addEventListener("click", () => clearObject(obj, "click"));
+      desk.appendChild(obj);
+      setTimeout(() => expireObject(obj), randomBetween(1800, 2800));
+    }
+
+    function randomBetween(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function expireObject(obj) {
+      if (!obj.isConnected || obj.classList.contains("squash")) return;
+      obj.classList.add("expired");
+      state.combo = 0;
+      state.calm = Math.max(0, state.calm - 3);
+      updateStats();
+      setTimeout(() => obj.remove(), 280);
+    }
+
+    function clearObject(obj, source) {
+      if (!state.running || state.paused || !obj.isConnected || obj.classList.contains("squash")) return;
+      const rect = obj.getBoundingClientRect();
+      const deskRect = desk.getBoundingClientRect();
+      const side = obj.dataset.side;
+      const base = source === "key" ? 14 : 10;
+      const points = base + Math.min(18, state.combo * 2);
+      state.combo += 1;
+      state.calm = Math.min(100, state.calm + 4 + Math.min(8, state.combo));
+      if (state.mode === "duo" && side === "right") {
+        state.scoreBValue += points;
+      } else {
+        state.scoreAValue += points;
+      }
+      obj.classList.add("squash");
+      floatText(`+${points}`, rect.left - deskRect.left + 24, rect.top - deskRect.top + 8);
+      beep(420 + state.combo * 18, .055, "square");
+      setTimeout(() => obj.remove(), 200);
+      updateStats();
+    }
+
+    function floatText(text, x, y) {
+      const el = document.createElement("div");
+      el.className = "float";
+      el.textContent = text;
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      desk.appendChild(el);
+      setTimeout(() => el.remove(), 740);
+    }
+
+    function finishGame() {
+      clearInterval(state.ticker);
+      clearTimeout(state.spawner);
+      state.running = false;
+      document.querySelectorAll(".object").forEach(el => el.remove());
+      const duo = state.mode === "duo";
+      const winner = duo
+        ? state.scoreAValue === state.scoreBValue
+          ? "平局，办公室气压稳定"
+          : state.scoreAValue > state.scoreBValue ? "玩家1更松弛" : "玩家2更松弛"
+        : state.calm >= 80 ? "今天状态很稳" : state.calm >= 55 ? "已经轻松不少" : "再来一局慢慢顺";
+      resultBox.innerHTML = duo
+        ? `<div>玩家1 ${state.scoreAValue}<span>${winner}</span></div><div>玩家2 ${state.scoreBValue}<span>连击最高靠手感</span></div>`
+        : `<div>${state.scoreAValue} 分<span>${winner}</span></div><div>${Math.round(state.calm)}%<span>舒缓度</span></div>`;
+      message.innerHTML = "这一局收工<small>喝口水，肩膀也放下来。</small>";
+      overlay.classList.remove("hidden");
+      overlay.querySelector("h2").textContent = winner;
+      overlay.querySelector("p").textContent = duo ? "换个位置再来一局，看看谁更会整理压力。" : "节奏不用快，能打断一下紧绷感就很好。";
+      overlayStart.textContent = "再来一局";
+      beep(700, .1, "triangle");
+    }
+
+    function updateStats() {
+      timeText.textContent = Math.max(0, state.time);
+      comboText.textContent = state.combo;
+      scoreA.textContent = state.scoreAValue;
+      scoreB.textContent = state.mode === "duo" ? state.scoreBValue : `${Math.round(state.calm)}%`;
+      calmFill.style.width = `${Math.round(state.calm)}%`;
+    }
+
+    modeButtons.forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+    startBtn.addEventListener("click", startGame);
+    overlayStart.addEventListener("click", startGame);
+    resetBtn.addEventListener("click", () => resetGame(true));
+    pauseBtn.addEventListener("click", togglePause);
+    soundBtn.addEventListener("click", () => {
+      initAudio();
+      state.sound = !state.sound;
+      soundBtn.textContent = state.sound ? "♪" : "×";
+      soundBtn.setAttribute("aria-label", state.sound ? "关闭声音" : "打开声音");
+    });
+
+    window.addEventListener("keydown", event => {
+      const key = event.key.toLowerCase();
+      if (event.code === "Space") {
+        event.preventDefault();
+        togglePause();
+        return;
+      }
+      if (!state.running || state.paused) return;
+      const target = [...document.querySelectorAll(".object")]
+        .find(obj => obj.dataset.key === key && !obj.classList.contains("squash"));
+      if (target) {
+        event.preventDefault();
+        clearObject(target, "key");
+      }
+    });
+
+    setMode("solo");
+  </script>
+</body>
+</html>
