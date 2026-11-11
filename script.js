@@ -56,7 +56,7 @@ const translations = {
     backToTop: "返回顶部 ↑",
     themeLight: "切换浅色模式",
     themeDark: "切换深色模式",
-    portraitAlt: "Zefeng Yang 的 GitHub 头像"
+    portraitAlt: "杨泽锋的抖音个人 IP 头像"
   },
   en: {
     documentTitle: "Zefeng Yang | Personal Website",
@@ -115,7 +115,7 @@ const translations = {
     backToTop: "Back to top ↑",
     themeLight: "Switch to light mode",
     themeDark: "Switch to dark mode",
-    portraitAlt: "GitHub profile picture of Zefeng Yang"
+    portraitAlt: "Douyin personal brand avatar of Zefeng Yang"
   }
 };
 
